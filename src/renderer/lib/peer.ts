@@ -1,7 +1,29 @@
-const ICE_SERVERS: RTCIceServer[] = [
+// Default ICE servers — STUN for direct, free public TURN for symmetric NAT fallback
+const DEFAULT_ICE_SERVERS: RTCIceServer[] = [
   { urls: 'stun:stun.l.google.com:19302' },
   { urls: 'stun:stun1.l.google.com:19302' },
+  // openrelay.metered.ca - free public TURN
+  {
+    urls: 'turn:openrelay.metered.ca:80',
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:443',
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
+  {
+    urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+    username: 'openrelayproject',
+    credential: 'openrelayproject',
+  },
 ];
+
+let configuredIceServers: RTCIceServer[] = DEFAULT_ICE_SERVERS;
+export function setIceServers(servers: RTCIceServer[] | null) {
+  configuredIceServers = (servers && servers.length > 0) ? servers : DEFAULT_ICE_SERVERS;
+}
 
 export type SignalPayload =
   | { kind: 'sdp'; sdp: RTCSessionDescriptionInit }
@@ -29,7 +51,7 @@ export class PeerConnection {
   constructor(remoteId: string, polite: boolean, localStream: MediaStream | null) {
     this.remoteId = remoteId;
     this.polite = polite;
-    this.pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+    this.pc = new RTCPeerConnection({ iceServers: configuredIceServers });
 
     if (localStream) {
       for (const track of localStream.getTracks()) {

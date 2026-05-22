@@ -25,6 +25,7 @@ export interface AppSettings {
   asrEndpoint: string;
   polishModel: string;
   signalingUrl: string;
+  iceServersJson: string;
 }
 
 declare global {

@@ -124,6 +124,19 @@ export function Settings({ onClose }: Props) {
           </div>
         </Field>
 
+        <Field label="STUN/TURN 服务器（高级）">
+          <textarea
+            value={settings.iceServersJson}
+            onChange={(e) => update('iceServersJson', e.target.value)}
+            placeholder='留空使用默认。自定义 JSON 数组，如：[{"urls":"turn:your.turn:3478","username":"u","credential":"p"}]'
+            rows={2}
+            style={{ resize: 'vertical', minHeight: 36, fontFamily: 'monospace', fontSize: 11 }}
+          />
+          <div style={{ fontSize: 11, color: 'var(--t-3)', marginTop: 4 }}>
+            跨网络对称 NAT 必须 TURN。默认含 Google STUN + openrelay TURN（可能不稳定）
+          </div>
+        </Field>
+
         <Field label="润色模型">
           <input value={settings.polishModel} onChange={(e) => update('polishModel', e.target.value)} />
         </Field>

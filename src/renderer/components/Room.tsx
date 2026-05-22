@@ -14,6 +14,7 @@ import { Icon } from './Icon';
 import { ChatPanel } from './ChatPanel';
 import { AudioLevels } from '../lib/audio-levels';
 import { Menu } from './Menu';
+import { setIceServers } from '../lib/peer';
 
 interface Props {
   mode: 'host' | 'guest';
@@ -133,6 +134,13 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
     (async () => {
       const s = await window.voiceMeet.settings.get();
       if (cancelled) return;
+      // Apply custom ICE servers from settings (if any)
+      if (s.iceServersJson?.trim()) {
+        try { setIceServers(JSON.parse(s.iceServersJson)); }
+        catch (e) { console.error('[room] invalid iceServersJson', e); setIceServers(null); }
+      } else {
+        setIceServers(null);
+      }
       const signalingUrl = invite.signal || s.signalingUrl;
       const client = new MeetingClient({ invite, name, isHost: mode === 'host', avatar, signalingUrl });
       clientRef.current = client;

@@ -9,6 +9,7 @@ export interface AppSettings {
   asrEndpoint: string;
   polishModel: string;
   signalingUrl: string;    // 公共信令服务 URL（wss://...）
+  iceServersJson: string;  // RTCIceServer[] JSON; '' = use defaults
 }
 
 const DEFAULTS: AppSettings = {
@@ -18,15 +19,17 @@ const DEFAULTS: AppSettings = {
   asrEndpoint: 'wss://dashscope.aliyuncs.com/api-ws/v1/inference',
   polishModel: 'qwen-plus',
   signalingUrl: 'wss://catchat-signal.onrender.com',
+  iceServersJson: '',
 };
 
 function settingsPath() {
   return path.join(app.getPath('userData'), 'settings.json');
 }
 
-interface StoredSettings extends Omit<AppSettings, 'apiKey' | 'signalingUrl'> {
+interface StoredSettings extends Omit<AppSettings, 'apiKey' | 'signalingUrl' | 'iceServersJson'> {
   apiKeyEnc: string | null;
   signalingUrl?: string;
+  iceServersJson?: string;
 }
 
 export function loadSettings(): AppSettings {
@@ -54,6 +57,7 @@ export function loadSettings(): AppSettings {
       asrEndpoint: raw.asrEndpoint || DEFAULTS.asrEndpoint,
       polishModel: raw.polishModel || DEFAULTS.polishModel,
       signalingUrl: (raw as any).signalingUrl || DEFAULTS.signalingUrl,
+      iceServersJson: (raw as any).iceServersJson ?? DEFAULTS.iceServersJson,
     };
   } catch (e) {
     console.error('[settings] load failed', e);
@@ -79,6 +83,7 @@ export function saveSettings(s: AppSettings) {
     asrEndpoint: s.asrEndpoint,
     polishModel: s.polishModel,
     signalingUrl: s.signalingUrl,
+    iceServersJson: s.iceServersJson,
   };
   fs.writeFileSync(p, JSON.stringify(stored, null, 2), 'utf-8');
 }
