@@ -247,16 +247,8 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
     video.srcObject = stream;
     if (stream) {
       console.log('[room] attach video stream', stream.id, 'video tracks:', stream.getVideoTracks().length);
-      // Diagnostic: poll videoWidth to see if frames actually decode
-      let polls = 0;
-      const checker = setInterval(() => {
-        polls++;
-        const vw = video.videoWidth;
-        const vh = video.videoHeight;
-        const ct = video.currentTime;
-        console.log(`[room] video status #${polls}: ${vw}x${vh} time=${ct.toFixed(2)}s paused=${video.paused}`);
-        if (polls > 8) clearInterval(checker);
-      }, 500);
+      // Explicit play() — autoPlay is policy-gated even with muted in some Electron configs
+      video.play().then(() => console.log('[room] video playing')).catch((e) => console.error('[room] play failed', e));
     }
   }, [activeScreenPeerId, remoteScreens, localScreenStream]);
 
@@ -459,7 +451,7 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
           {isSharing ? (
             <>
               <div className="share-area">
-                <video ref={screenVideoRef} autoPlay playsInline muted={!activeScreenPeerId} />
+                <video ref={screenVideoRef} autoPlay playsInline muted />
                 <div className="label">
                   <Icon name="screen-share" size={14} />
                   {sharerName} 正在共享
