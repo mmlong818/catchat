@@ -31,6 +31,14 @@ function createWindow() {
     mainWindow?.focus();
   });
 
+  // Re-enable F12 / Ctrl+Shift+I to toggle DevTools (Menu was disabled)
+  mainWindow.webContents.on('before-input-event', (_e, input) => {
+    if (input.type !== 'keyDown') return;
+    if (input.key === 'F12' || (input.key === 'I' && input.control && input.shift)) {
+      mainWindow?.webContents.toggleDevTools();
+    }
+  });
+
   // Modern Electron screen sharing: getDisplayMedia in renderer calls this handler.
   // We use our own picker UI in renderer; user's choice is stashed in pendingScreenSource.
   mainWindow.webContents.session.setDisplayMediaRequestHandler(async (_req, callback) => {
