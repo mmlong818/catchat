@@ -14,8 +14,6 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 900,
-    minWidth: 800,
-    minHeight: 600,
     center: true,
     show: false,
     title: 'CatChat',
