@@ -749,25 +749,22 @@ label {
 }
 @keyframes backdropIn { from { opacity: 0; } to { opacity: 1; } }
 .modal {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: fit-content;
-  height: fit-content;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: var(--bg-elev-solid);
   border-radius: var(--r-4);
   padding: var(--s-6);
   min-width: 340px;
   max-width: 92vw;
-  max-height: 92vh;
-  overflow-y: auto;
   box-shadow: var(--sh-3);
-  animation: modalIn var(--d-slow) var(--ease-out);
 }
 @keyframes modalIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to { opacity: 1; transform: scale(1); }
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.97); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
+.modal { animation: modalIn var(--d-slow) var(--ease-out); }
 .modal.settings {
   background: linear-gradient(180deg, #fff 0%, #fdf4ec 100%);
 }
