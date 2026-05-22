@@ -16,6 +16,8 @@ contextBridge.exposeInMainWorld('voiceMeet', {
   },
   screen: {
     getSources: () => ipcRenderer.invoke('screen:getSources'),
+    setActiveSource: (sourceId: string, withAudio: boolean) =>
+      ipcRenderer.invoke('screen:setActiveSource', sourceId, withAudio),
     nativeScreenshot: () => ipcRenderer.invoke('screenshot:native'),
     cancelScreenshot: () => ipcRenderer.invoke('screenshot:cancel'),
   },

@@ -43,6 +43,7 @@ declare global {
       };
       screen: {
         getSources: () => Promise<Array<{ id: string; name: string; thumbnail: string; isScreen: boolean }>>;
+        setActiveSource: (sourceId: string, withAudio: boolean) => Promise<void>;
         nativeScreenshot: () => Promise<{ png?: ArrayBuffer; error?: string; timeout?: boolean; cancelled?: boolean }>;
         cancelScreenshot: () => Promise<void>;
       };

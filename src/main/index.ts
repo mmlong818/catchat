@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, protocol, desktopCapturer, clipboard, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain, shell, protocol, desktopCapturer, clipboard, Menu, session } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { startAsrSession, sendAsrAudio, stopAsrSession } from './asr-proxy';
@@ -29,6 +29,28 @@ function createWindow() {
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show();
     mainWindow?.focus();
+  });
+
+  // Modern Electron screen sharing: getDisplayMedia in renderer calls this handler.
+  // We use our own picker UI in renderer; user's choice is stashed in pendingScreenSource.
+  mainWindow.webContents.session.setDisplayMediaRequestHandler(async (_req, callback) => {
+    if (!pendingScreenSource) {
+      callback({});
+      return;
+    }
+    const { sourceId, withAudio } = pendingScreenSource;
+    pendingScreenSource = null;
+    const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
+    const source = sources.find((s) => s.id === sourceId);
+    if (!source) {
+      callback({});
+      return;
+    }
+    callback({
+      video: source,
+      // 'loopback' captures system audio on Windows; only valid for screen sources, not windows
+      audio: withAudio && source.id.startsWith('screen:') ? 'loopback' : undefined,
+    });
   });
 
   if (isDev) {
@@ -208,4 +230,10 @@ ipcMain.handle('screen:getSources', async () => {
     thumbnail: s.thumbnail.toDataURL(),
     isScreen: s.id.startsWith('screen:'),
   }));
+});
+
+// Holds the user-picked source between picker selection and getDisplayMedia call
+let pendingScreenSource: { sourceId: string; withAudio: boolean } | null = null;
+ipcMain.handle('screen:setActiveSource', (_e, sourceId: string, withAudio: boolean) => {
+  pendingScreenSource = { sourceId, withAudio };
 });

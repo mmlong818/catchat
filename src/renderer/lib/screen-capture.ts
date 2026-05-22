@@ -1,20 +1,16 @@
 export async function captureScreen(sourceId: string, withAudio = false): Promise<MediaStream> {
-  // Electron-specific getUserMedia constraints for desktopCapturer source
-  const constraints: any = {
-    audio: withAudio
-      ? { mandatory: { chromeMediaSource: 'desktop', chromeMediaSourceId: sourceId } }
-      : false,
+  // Modern Electron API: tell main process which source the user picked,
+  // then call getDisplayMedia. Main's setDisplayMediaRequestHandler returns the source.
+  // This avoids the Electron 30+ "black screen" issue with legacy chromeMediaSource.
+  await window.voiceMeet.screen.setActiveSource(sourceId, withAudio);
+  const stream = await navigator.mediaDevices.getDisplayMedia({
     video: {
-      mandatory: {
-        chromeMediaSource: 'desktop',
-        chromeMediaSourceId: sourceId,
-        maxWidth: 1920,
-        maxHeight: 1080,
-        maxFrameRate: 15,
-      },
+      width: { max: 1920 },
+      height: { max: 1080 },
+      frameRate: { max: 15 },
     },
-  };
-  const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    audio: withAudio,
+  });
   return stream;
 }
 
