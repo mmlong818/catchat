@@ -4,7 +4,8 @@ type IconName =
   | 'smile' | 'folder' | 'scissors' | 'mic' | 'mic-off'
   | 'screen-share' | 'screen-stop' | 'send' | 'settings'
   | 'users' | 'chat' | 'link' | 'download' | 'close'
-  | 'crown' | 'camera' | 'image' | 'leave' | 'more' | 'phone-off';
+  | 'crown' | 'camera' | 'image' | 'leave' | 'more' | 'phone-off'
+  | 'chevron-left' | 'chevron-right';
 
 interface Props {
   name: IconName;
@@ -34,6 +35,8 @@ const PATHS: Record<IconName, JSX.Element> = {
   leave: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></>,
   more: <><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" /><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none" /><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none" /></>,
   'phone-off': <><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91" /><line x1="23" y1="1" x2="1" y2="23" /></>,
+  'chevron-left': <polyline points="15 18 9 12 15 6" />,
+  'chevron-right': <polyline points="9 18 15 12 9 6" />,
 };
 
 export function Icon({ name, size = 18, style, className }: Props) {

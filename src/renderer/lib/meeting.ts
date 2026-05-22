@@ -227,9 +227,12 @@ export class MeetingClient {
   async startScreenShare(stream: MediaStream) {
     this.stopScreenShare();
     this.screenStream = stream;
+    console.log('[meeting] startScreenShare to', this.connections.size, 'peers, tracks:',
+      stream.getTracks().map((t) => `${t.kind}(${t.id.slice(0, 6)})`).join(','));
     for (const [peerId, pc] of this.connections) {
       const senderMap = pc.addStream(stream);
       this.screenSenders.set(peerId, [...senderMap.values()]);
+      console.log('[meeting] added screen tracks to peer', peerId, 'senders:', senderMap.size);
     }
     // Auto-stop when user clicks browser's "stop sharing" overlay
     for (const t of stream.getTracks()) {

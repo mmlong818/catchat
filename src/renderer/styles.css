@@ -243,19 +243,24 @@ label {
   right: 320px;
   transform: translate(50%, -50%);
   z-index: 30;
-  width: 18px;
-  height: 56px;
+  width: 28px;
+  height: 72px;
   border-radius: var(--r-full);
   background: var(--bg-elev-solid);
-  border: 1px solid var(--b-1);
-  color: var(--t-3);
+  border: 1px solid var(--b-2);
+  color: var(--t-2);
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: var(--sh-1);
-  transition: right var(--d-base) var(--ease-out), background var(--d-fast);
+  box-shadow: var(--sh-2);
+  transition: right var(--d-base) var(--ease-out), background var(--d-fast), transform var(--d-fast);
   padding: 0;
 }
-.side-handle:hover { background: var(--bg-soft); color: var(--t-1); }
+.side-handle:hover {
+  background: var(--brand);
+  color: #fff;
+  transform: translate(50%, -50%) scale(1.06);
+  border-color: var(--brand);
+}
 .room.side-collapsed .side-handle { right: 0; }
 
 @media (max-width: 900px) {

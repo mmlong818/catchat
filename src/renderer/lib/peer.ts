@@ -39,11 +39,13 @@ export class PeerConnection {
 
     this.pc.ontrack = (e) => {
       const [stream] = e.streams;
+      console.log('[peer]', this.remoteId, 'received track:', e.track.kind, 'stream:', stream?.id);
       if (e.track.kind === 'audio') {
         this.listeners.remoteStream?.(stream);
       } else if (e.track.kind === 'video') {
         this.listeners.remoteVideoTrack?.(e.track, stream);
         e.track.addEventListener('ended', () => {
+          console.log('[peer]', this.remoteId, 'video track ended');
           this.listeners.remoteVideoTrackEnded?.(e.track.id);
         });
       }

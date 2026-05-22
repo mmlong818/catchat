@@ -71,6 +71,19 @@ export function Settings({ onClose }: Props) {
         <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
           <button className="primary" onClick={save}>保存设置</button>
           <button onClick={check}>检查状态</button>
+          <span style={{ flex: 1 }} />
+          <button
+            onClick={() => {
+              if (confirm('清空所有设置（包括 API Key）？')) {
+                setSettings({ ...settings, apiKey: '' });
+                setStatus('已清空，请点保存生效');
+              }
+            }}
+            style={{ color: 'var(--danger)' }}
+            title="清空 API Key 和其他配置"
+          >
+            清空
+          </button>
         </div>
 
         <Field label="语音识别模式">

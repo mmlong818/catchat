@@ -478,7 +478,7 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
         onClick={() => setSideCollapsed((v) => !v)}
         title={sideCollapsed ? '展开侧栏' : '收起侧栏'}
       >
-        <Icon name={sideCollapsed ? 'chat' : 'close'} size={12} />
+        <Icon name={sideCollapsed ? 'chevron-left' : 'chevron-right'} size={16} />
       </button>
 
       <aside className="side-panel">
