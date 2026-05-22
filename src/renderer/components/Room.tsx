@@ -241,11 +241,13 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
     let stream: MediaStream | null = null;
     if (activeScreenPeerId) stream = remoteScreens.get(activeScreenPeerId) ?? null;
     else if (localScreenStream) stream = localScreenStream;
+    // Only re-assign if stream actually changed — re-setting srcObject triggers a
+    // fresh load that interrupts the current play(), causing "interrupted by new load" errors.
+    if (video.srcObject === stream) return;
     video.srcObject = stream;
     if (stream) {
       console.log('[room] attach video stream', stream.id, 'video tracks:', stream.getVideoTracks().length);
-      video.play().then(() => console.log('[room] video playing'))
-        .catch((e) => console.error('[room] video.play() failed', e));
+      // Rely on autoPlay attribute; explicit play() can race with the load.
     }
   }, [activeScreenPeerId, remoteScreens, localScreenStream]);
 

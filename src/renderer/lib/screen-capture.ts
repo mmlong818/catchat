@@ -11,10 +11,10 @@ export async function captureScreen(sourceId: string, withAudio = false): Promis
     },
     audio: withAudio,
   });
-  // Set contentHint so the encoder knows this is screen content and starts producing frames.
-  // Without this, the track may stay "muted" (no RTP frames) on the receiver side.
+  // Set contentHint for the encoder. 'motion' = continuous frames even if screen is mostly static.
+  // 'detail' caused track to mute back after first frame in some Electron setups.
   for (const t of stream.getVideoTracks()) {
-    t.contentHint = 'detail'; // 'detail' optimizes for text/UI clarity over motion smoothness
+    t.contentHint = 'motion';
   }
   for (const t of stream.getAudioTracks()) {
     t.contentHint = 'music';
