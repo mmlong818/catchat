@@ -12,8 +12,10 @@ let pendingDeepLink: string | null = null;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1024,
+    height: 768,
+    minWidth: 800,
+    minHeight: 600,
     center: true,
     show: false,
     title: 'CatChat',
