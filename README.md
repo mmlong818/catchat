@@ -2,10 +2,13 @@
 
 > 基于 Electron + WebRTC 的 P2P 跨网络语音会议系统，自带阿里云实时语音转写
 
+[![Version](https://img.shields.io/github/package-json/v/mmlong818/catchat?color=ff6b4a&label=version)](https://github.com/mmlong818/catchat/releases)
 ![Electron](https://img.shields.io/badge/Electron-31-47848F?logo=electron&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript&logoColor=white)
-![License](https://img.shields.io/badge/License-AGPLv3-blue)
+[![License](https://img.shields.io/badge/License-AGPLv3-blue)](LICENSE)
+
+**[👉 下载最新安装包](https://github.com/mmlong818/catchat/releases/latest)** · **[问题反馈](https://github.com/mmlong818/catchat/issues)**
 
 ## ✨ 功能
 
@@ -20,6 +23,17 @@
 - 🔁 **断线重连** — ICE restart 自愈
 - 🎨 **音量光环** — 当前说话人头像呼吸光晕，自动置顶
 - 🔗 **自定义协议邀请** — `aimeet://join?room=...&token=...` 一键加入
+
+## 📋 系统要求与已知限制
+
+| | |
+|---|---|
+| **平台** | Windows 10/11（macOS / Linux 理论可编译但未测试） |
+| **网络** | 任意网络（同 WiFi / 异地 / 4G 均可，无需端口转发） |
+| **依赖外部服务** | 阿里云 DashScope（转写）+ 公共信令中转（媒体不依赖） |
+| **会议人数** | 2-12 人（mesh 拓扑，过多人时房主上行带宽吃紧） |
+| **首次连接** | 公共信令是 Render 免费层，休眠后唤醒约 30 秒，可自部署回避 |
+| **NAT 穿透** | STUN 已配置，~70% 用户直连可用；对称 NAT 需 TURN（暂未集成） |
 
 ## 🏗️ 架构
 
@@ -76,7 +90,7 @@
 ### 本地运行
 
 ```bash
-git clone https://github.com/yourname/catchat.git
+git clone https://github.com/mmlong818/catchat.git
 cd catchat
 npm install
 npm run dev
@@ -88,7 +102,7 @@ npm run dev
 
 ```bash
 npm run package
-# 产出在 dist/CatChat Setup x.x.x.exe
+# 产出在 release/CatChat Setup x.x.x.exe
 ```
 
 ### 项目结构
@@ -197,6 +211,28 @@ wss://my-catchat-signal-xxxx.onrender.com
 - **媒体不经服务器**：音频/视频/文件全部 P2P，信令服务只看到房间路由元数据
 - **Token 防伪**：每场会议 128-bit 随机 token，无法被穷举
 - **会议纪要本地存**：转写只在参会者机器之间同步，不上传任何服务器（除阿里云做 STT）
+
+## 📜 版本历史
+
+| 版本 | 关键改动 |
+|---|---|
+| **0.2.4** | License → AGPL-3.0；设置面板居中修复 |
+| **0.2.3** | 屏幕共享黑屏修复（切到 Electron 现代 `setDisplayMediaRequestHandler` API） |
+| **0.2.2** | 转写 23 秒超时修复（打包后 AudioWorklet 路径解析问题） |
+| **0.2.1** | 邀请链接解析容错；安装包从 1.2GB 缩到 75MB |
+| **0.2.0** | **架构重做** — 公共信令中转替代局域网内嵌服务器，跨网络可用 |
+| 0.1.0 | 局域网版（已废弃） |
+
+## 🗺️ 路线图
+
+- [ ] TURN 服务集成（解决对称 NAT 跨网络问题）
+- [ ] macOS / Linux 构建测试
+- [ ] 应用图标 + 代码签名（去掉 SmartScreen 拦截）
+- [ ] 转写润色（DashScope `qwen-plus` 后处理，已预留接口）
+- [ ] 自动更新（electron-updater）
+- [ ] 暗色主题
+- [ ] 可拖出的浮动控件
+- [ ] 端到端加密（媒体已 SRTP；信令也加 E2EE）
 
 ## 🤝 贡献
 
