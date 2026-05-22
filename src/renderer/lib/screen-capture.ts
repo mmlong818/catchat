@@ -4,11 +4,7 @@ export async function captureScreen(sourceId: string, withAudio = false): Promis
   // This avoids the Electron 30+ "black screen" issue with legacy chromeMediaSource.
   await window.voiceMeet.screen.setActiveSource(sourceId, withAudio);
   const stream = await navigator.mediaDevices.getDisplayMedia({
-    video: {
-      width: { max: 1920 },
-      height: { max: 1080 },
-      frameRate: { max: 15 },
-    },
+    video: true,
     audio: withAudio,
   });
   // Set contentHint for the encoder. 'motion' = continuous frames even if screen is mostly static.

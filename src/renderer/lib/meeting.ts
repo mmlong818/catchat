@@ -233,6 +233,21 @@ export class MeetingClient {
       const senderMap = pc.addStream(stream);
       this.screenSenders.set(peerId, [...senderMap.values()]);
       console.log('[meeting] added screen tracks to peer', peerId, 'senders:', senderMap.size);
+      // Force encoder to maintain bitrate / framerate so receiver doesn't see "muted" track
+      for (const sender of senderMap.values()) {
+        if (sender.track?.kind !== 'video') continue;
+        try {
+          const params = sender.getParameters();
+          if (!params.encodings || params.encodings.length === 0) {
+            params.encodings = [{}];
+          }
+          params.encodings[0].maxBitrate = 2_500_000;
+          await sender.setParameters(params);
+          console.log('[meeting] set encoder params on', peerId);
+        } catch (e) {
+          console.error('[meeting] setParameters failed', e);
+        }
+      }
     }
     // Auto-stop when user clicks browser's "stop sharing" overlay
     for (const t of stream.getTracks()) {
