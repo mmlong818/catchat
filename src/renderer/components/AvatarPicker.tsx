@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Avatar } from './Avatar';
 import {
   type Avatar as AvatarT,
@@ -50,7 +51,7 @@ export function AvatarPicker({ name, current, onChange }: Props) {
         <Avatar avatar={current} name={name} size="lg" />
       </button>
 
-      {open && (
+      {open && createPortal(
         <div className="modal-backdrop" onClick={() => setOpen(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
             <h3>选择头像</h3>
@@ -82,7 +83,8 @@ export function AvatarPicker({ name, current, onChange }: Props) {
               }}
             />
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );

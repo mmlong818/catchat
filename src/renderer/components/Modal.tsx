@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 interface Props {
   title: string;
@@ -11,7 +12,7 @@ interface Props {
 }
 
 export function ConfirmModal({ title, body, confirmText = '确定', cancelText = '取消', danger, onConfirm, onCancel }: Props) {
-  return (
+  return createPortal(
     <div className="modal-backdrop" onClick={onCancel}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <h3>{title}</h3>
@@ -21,6 +22,7 @@ export function ConfirmModal({ title, body, confirmText = '确定', cancelText =
           <button className={danger ? 'danger' : 'primary'} onClick={onConfirm}>{confirmText}</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

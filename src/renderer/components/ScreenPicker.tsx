@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface Source {
   id: string;
@@ -25,7 +26,7 @@ export function ScreenPicker({ onPick, onCancel }: Props) {
     filter === 'all' ? true : filter === 'screen' ? s.isScreen : !s.isScreen,
   );
 
-  return (
+  return createPortal(
     <div className="modal-backdrop" onClick={onCancel}>
       <div className="modal" onClick={(e) => e.stopPropagation()} style={{ width: 720, maxWidth: '90vw' }}>
         <h3>选择要共享的内容</h3>
@@ -110,6 +111,7 @@ export function ScreenPicker({ onPick, onCancel }: Props) {
           <button onClick={onCancel}>取消</button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

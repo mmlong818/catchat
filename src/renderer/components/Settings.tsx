@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { AppSettings } from '../global';
 
 interface Props {
@@ -51,14 +52,15 @@ export function Settings({ onClose }: Props) {
   };
 
   if (!settings) {
-    return (
-      <div className="modal-backdrop"><div className="modal">加载中…</div></div>
+    return createPortal(
+      <div className="modal-backdrop"><div className="modal">加载中…</div></div>,
+      document.body,
     );
   }
 
   const saved = savedAt !== null;
 
-  return (
+  return createPortal(
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal settings" onClick={(e) => e.stopPropagation()} style={{ width: 460, maxWidth: '92vw' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
@@ -139,7 +141,8 @@ export function Settings({ onClose }: Props) {
           {status || ' '}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

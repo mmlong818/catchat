@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { InviteLink, Peer } from '../../shared/types';
 import { buildInviteLink } from '../lib/invite';
 import { MeetingClient, type ChatMessage, type FileTransferUpdate } from '../lib/meeting';
@@ -664,7 +665,7 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
         </div>
       )}
 
-      {previewImage && (
+      {previewImage && createPortal(
         <div className="modal-backdrop" onClick={() => setPreviewImage(null)}>
           <div onClick={(e) => e.stopPropagation()} style={{ position: 'relative' }}>
             <button onClick={() => setPreviewImage(null)} title="关闭"
@@ -677,7 +678,8 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
             </button>
             <img src={previewImage} alt="预览" style={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: 6, display: 'block' }} />
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
 
       {confirm === 'leave' && (
