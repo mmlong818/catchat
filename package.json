@@ -38,6 +38,9 @@
   "build": {
     "appId": "com.catchat.app",
     "productName": "CatChat",
+    "directories": {
+      "output": "release"
+    },
     "protocols": [
       {
         "name": "CatChat",
@@ -50,7 +53,13 @@
       "dist/**/*",
       "node_modules/**/*",
       "!**/.env",
-      "!**/.env.*"
+      "!**/.env.*",
+      "!**/*.map",
+      "!**/test/**",
+      "!**/tests/**",
+      "!**/*.md",
+      "!**/.bin/**",
+      "!**/{CHANGELOG.md,LICENSE,license,README.md,readme.md,HISTORY.md}"
     ],
     "win": {
       "target": "nsis"
