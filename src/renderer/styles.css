@@ -241,7 +241,8 @@ label {
   position: absolute;
   top: 50%;
   right: 320px;
-  transform: translate(50%, -50%);
+  margin-right: -14px; /* half of handle width to half-overlap the gap */
+  margin-top: -36px; /* half of handle height for vertical centering */
   z-index: 30;
   width: 28px;
   height: 72px;
@@ -252,14 +253,17 @@ label {
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   box-shadow: var(--sh-2);
-  transition: right var(--d-base) var(--ease-out), background var(--d-fast), transform var(--d-fast);
+  transition: right var(--d-base) var(--ease-out), background var(--d-fast), border-color var(--d-fast), color var(--d-fast);
   padding: 0;
+  transform: none;
 }
-.side-handle:hover {
+.side-handle:hover:not(:disabled) {
   background: var(--brand);
   color: #fff;
-  transform: translate(50%, -50%) scale(1.06);
   border-color: var(--brand);
+}
+.side-handle:active:not(:disabled) {
+  transform: scale(0.94);
 }
 .room.side-collapsed .side-handle { right: 0; }
 
