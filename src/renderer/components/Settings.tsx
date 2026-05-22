@@ -88,7 +88,6 @@ export function Settings({ onClose, initialFocus }: Props) {
             type="password"
             placeholder="填入后保存，会加密保存到本地"
             value={settings.apiKey}
-            autoFocus={initialFocus === 'apiKey'}
             onChange={(e) => update('apiKey', e.target.value)}
           />
         </Field>
