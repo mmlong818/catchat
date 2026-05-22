@@ -5,7 +5,9 @@ export class AudioCapture {
 
   async start(stream: MediaStream, onPcmChunk: (buf: ArrayBuffer) => void) {
     this.ctx = new AudioContext();
-    await this.ctx.audioWorklet.addModule('/pcm-worklet.js');
+    // Use relative URL so it works under both vite dev (http://localhost:5173/)
+    // and packaged Electron (file:// where '/' would resolve to filesystem root)
+    await this.ctx.audioWorklet.addModule(new URL('pcm-worklet.js', window.location.href).toString());
     this.source = this.ctx.createMediaStreamSource(stream);
     this.node = new AudioWorkletNode(this.ctx, 'pcm-downsampler');
     this.node.port.onmessage = (e) => onPcmChunk(e.data as ArrayBuffer);
