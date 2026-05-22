@@ -1,0 +1,65 @@
+{
+  "name": "voice-meet",
+  "version": "0.2.0",
+  "description": "P2P 语音会议系统（Electron + WebRTC + 阿里云 fun-asr-realtime）",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\"",
+    "dev:renderer": "vite",
+    "dev:electron": "wait-on tcp:5173 && tsc -p tsconfig.main.json && electron .",
+    "build": "tsc -p tsconfig.main.json && vite build",
+    "start": "electron .",
+    "typecheck": "tsc -p tsconfig.main.json --noEmit && tsc -p tsconfig.renderer.json --noEmit",
+    "package": "npm run build && electron-builder"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "simple-peer": "^9.11.1",
+    "uuid": "^10.0.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/simple-peer": "^9.11.8",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.5.10",
+    "@vitejs/plugin-react": "^4.3.1",
+    "concurrently": "^8.2.2",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.0",
+    "vite": "^5.3.0",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.catchat.app",
+    "productName": "CatChat",
+    "protocols": [
+      {
+        "name": "CatChat",
+        "schemes": [
+          "aimeet"
+        ]
+      }
+    ],
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "!**/.env",
+      "!**/.env.*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

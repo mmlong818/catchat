@@ -1,0 +1,16 @@
+{
+  "name": "catchat-signaling-server",
+  "version": "0.1.0",
+  "description": "CatChat 公共信令中转服务（仅信令，不转发媒体）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
