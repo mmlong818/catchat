@@ -65,7 +65,7 @@ export function Lobby({ incomingInvite, onHost, onJoin }: Props) {
         <Icon name="settings" size={20} />
       </button>
       <h1>CatChat</h1>
-      <div className="subtitle">语音 · 转写 · P2P · 安全私享</div>
+      <div className="subtitle">语音 · 转写 · P2P · 安全私享 · v{__APP_VERSION__}</div>
 
       <div className="field" style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
         <AvatarPicker name={name || '?'} current={avatar} onChange={updateAvatar} />

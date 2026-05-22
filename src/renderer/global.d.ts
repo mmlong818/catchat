@@ -28,6 +28,7 @@ export interface AppSettings {
 }
 
 declare global {
+  const __APP_VERSION__: string;
   interface Window {
     voiceMeet: {
       onDeepLink: (cb: (url: string) => void) => void;
