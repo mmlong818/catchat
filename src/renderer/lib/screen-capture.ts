@@ -11,6 +11,14 @@ export async function captureScreen(sourceId: string, withAudio = false): Promis
     },
     audio: withAudio,
   });
+  // Set contentHint so the encoder knows this is screen content and starts producing frames.
+  // Without this, the track may stay "muted" (no RTP frames) on the receiver side.
+  for (const t of stream.getVideoTracks()) {
+    t.contentHint = 'detail'; // 'detail' optimizes for text/UI clarity over motion smoothness
+  }
+  for (const t of stream.getAudioTracks()) {
+    t.contentHint = 'music';
+  }
   return stream;
 }
 

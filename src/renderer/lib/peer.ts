@@ -43,6 +43,12 @@ export class PeerConnection {
       if (e.track.kind === 'audio') {
         this.listeners.remoteStream?.(stream);
       } else if (e.track.kind === 'video') {
+        e.track.addEventListener('unmute', () => {
+          console.log('[peer]', this.remoteId, 'video track UNMUTED (frames now flowing)');
+        });
+        e.track.addEventListener('mute', () => {
+          console.log('[peer]', this.remoteId, 'video track muted (no frames)');
+        });
         this.listeners.remoteVideoTrack?.(e.track, stream);
         e.track.addEventListener('ended', () => {
           console.log('[peer]', this.remoteId, 'video track ended');
