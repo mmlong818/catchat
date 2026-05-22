@@ -7,6 +7,7 @@ export type DataChannelMessage =
   | { kind: 'transcript'; entry: TranscriptEntry }
   | { kind: 'transcript-history'; entries: TranscriptEntry[] }
   | { kind: 'mic-state'; from: string; muted: boolean }
+  | { kind: 'screen-stopped'; from: string }
   | FileStartMeta
   | FileEndMeta;
 
@@ -260,6 +261,8 @@ export class MeetingClient {
 
   stopScreenShare() {
     if (!this.screenStream) return;
+    // Tell all peers we're stopping (don't rely solely on track.ended which can be flaky)
+    this.broadcast({ kind: 'screen-stopped', from: this.self.id });
     for (const t of this.screenStream.getTracks()) t.stop();
     for (const [peerId, senders] of this.screenSenders) {
       const pc = this.connections.get(peerId);
@@ -342,6 +345,10 @@ export class MeetingClient {
     if (msg.kind === 'transcript-history') {
       // forward — Room will ingest into its store
       this.listeners.data?.(remoteId, msg);
+      return;
+    }
+    if (msg.kind === 'screen-stopped') {
+      this.listeners.remoteScreenEnded?.(msg.from);
       return;
     }
     if (msg.kind === 'mic-state') {
