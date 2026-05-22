@@ -57,12 +57,6 @@ export class PeerConnection {
       }
     };
 
-    this.pc.onicecandidate = (e) => {
-      if (e.candidate) {
-        this.listeners.signal?.({ kind: 'ice', candidate: e.candidate.toJSON() });
-      }
-    };
-
     this.pc.onnegotiationneeded = async () => {
       try {
         this.makingOffer = true;
@@ -78,8 +72,20 @@ export class PeerConnection {
     };
 
     this.pc.onconnectionstatechange = () => {
+      console.log('[peer]', this.remoteId, 'connectionState:', this.pc.connectionState,
+        'iceConn:', this.pc.iceConnectionState);
       if (['failed', 'closed', 'disconnected'].includes(this.pc.connectionState)) {
         if (this.pc.connectionState === 'closed') this.listeners.close?.();
+      }
+    };
+    this.pc.oniceconnectionstatechange = () => {
+      console.log('[peer]', this.remoteId, 'iceConnectionState:', this.pc.iceConnectionState);
+    };
+    this.pc.onicecandidate = (e) => {
+      if (e.candidate) {
+        const c = e.candidate;
+        console.log('[peer]', this.remoteId, 'local ICE:', c.type, c.protocol, c.address || c.candidate);
+        this.listeners.signal?.({ kind: 'ice', candidate: e.candidate.toJSON() });
       }
     };
 
