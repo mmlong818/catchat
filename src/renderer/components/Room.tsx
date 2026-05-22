@@ -188,7 +188,10 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
         setSharing(sh);
         setLocalScreenStream(sh ? client.getScreenStream() : null);
       });
-      client.on('remoteScreenTrack', (peerId, _t, stream) => {
+      client.on('remoteScreenTrack', (peerId, track, stream) => {
+        console.log('[room] remoteScreenTrack from', peerId, 'streamId:', stream.id,
+          'tracks:', stream.getTracks().map((t) => `${t.kind}(${t.readyState})`).join(','),
+          'track muted:', track.muted, 'enabled:', track.enabled);
         setRemoteScreens((prev) => new Map(prev).set(peerId, stream));
         setActiveScreenPeerId(peerId);
       });
@@ -231,12 +234,14 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
   useEffect(() => {
     const video = screenVideoRef.current;
     if (!video) return;
-    if (activeScreenPeerId) {
-      const s = remoteScreens.get(activeScreenPeerId); if (s) video.srcObject = s;
-    } else if (localScreenStream) {
-      video.srcObject = localScreenStream;
-    } else {
-      video.srcObject = null;
+    let stream: MediaStream | null = null;
+    if (activeScreenPeerId) stream = remoteScreens.get(activeScreenPeerId) ?? null;
+    else if (localScreenStream) stream = localScreenStream;
+    video.srcObject = stream;
+    if (stream) {
+      console.log('[room] attach video stream', stream.id, 'video tracks:', stream.getVideoTracks().length);
+      video.play().then(() => console.log('[room] video playing'))
+        .catch((e) => console.error('[room] video.play() failed', e));
     }
   }, [activeScreenPeerId, remoteScreens, localScreenStream]);
 
