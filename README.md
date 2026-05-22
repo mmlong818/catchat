@@ -5,7 +5,7 @@
 ![Electron](https://img.shields.io/badge/Electron-31-47848F?logo=electron&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green)
+![License](https://img.shields.io/badge/License-AGPLv3-blue)
 
 ## ✨ 功能
 
@@ -207,4 +207,6 @@ wss://my-catchat-signal-xxxx.onrender.com
 
 ## 📜 License
 
-MIT
+[AGPL-3.0](LICENSE) © 2026 mmlong818
+
+**重要**：AGPL 是强 copyleft 协议。如果你修改 CatChat 并通过网络提供服务（如部署成 SaaS），必须公开完整源代码。任何衍生作品也必须以 AGPL 发布。
