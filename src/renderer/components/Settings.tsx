@@ -6,7 +6,7 @@ interface Props {
   initialFocus?: 'apiKey';
 }
 
-export function Settings({ onClose, initialFocus }: Props) {
+export function Settings({ onClose }: Props) {
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [dataDir, setDataDir] = useState('');
   const [savedAt, setSavedAt] = useState<number | null>(null);
@@ -42,8 +42,6 @@ export function Settings({ onClose, initialFocus }: Props) {
     }
     setStatus('检查中…');
     try {
-      // We can't actually open a WS from renderer with custom headers easily;
-      // instead just sanity-check the format & endpoint reachability via a fetch HEAD
       const url = new URL(settings.asrEndpoint.replace(/^wss:/, 'https:').replace(/^ws:/, 'http:'));
       await fetch(url.origin, { method: 'HEAD', mode: 'no-cors' });
       setStatus('✅ 端点可达，API Key 已保存（实际能否使用以发起会议时为准）');
@@ -138,7 +136,7 @@ export function Settings({ onClose, initialFocus }: Props) {
                  status.startsWith('❌') || status.startsWith('⚠️') ? 'var(--danger)' : 'var(--t-2)',
           fontSize: 13,
         }}>
-          {status || ' '}
+          {status || ' '}
         </div>
       </div>
     </div>

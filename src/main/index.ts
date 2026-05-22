@@ -13,7 +13,7 @@ let pendingDeepLink: string | null = null;
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1024,
-    height: 768,
+    height: 900,
     minWidth: 800,
     minHeight: 600,
     center: true,

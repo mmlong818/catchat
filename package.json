@@ -1,6 +1,6 @@
 {
   "name": "voice-meet",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "P2P 语音会议系统（Electron + WebRTC + 阿里云 fun-asr-realtime）",
   "license": "AGPL-3.0-or-later",
   "main": "dist/main/index.js",
