@@ -242,6 +242,8 @@ export class MeetingClient {
             params.encodings = [{}];
           }
           params.encodings[0].maxBitrate = 2_500_000;
+          // Prefer dropping quality/resolution before frame rate so receiver doesn't see freeze
+          params.degradationPreference = 'maintain-framerate';
           await sender.setParameters(params);
           console.log('[meeting] set encoder params on', peerId);
         } catch (e) {

@@ -247,7 +247,16 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
     video.srcObject = stream;
     if (stream) {
       console.log('[room] attach video stream', stream.id, 'video tracks:', stream.getVideoTracks().length);
-      // Rely on autoPlay attribute; explicit play() can race with the load.
+      // Diagnostic: poll videoWidth to see if frames actually decode
+      let polls = 0;
+      const checker = setInterval(() => {
+        polls++;
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        const ct = video.currentTime;
+        console.log(`[room] video status #${polls}: ${vw}x${vh} time=${ct.toFixed(2)}s paused=${video.paused}`);
+        if (polls > 8) clearInterval(checker);
+      }, 500);
     }
   }, [activeScreenPeerId, remoteScreens, localScreenStream]);
 
