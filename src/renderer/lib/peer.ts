@@ -23,6 +23,10 @@ const DEFAULT_ICE_SERVERS: RTCIceServer[] = [
 let configuredIceServers: RTCIceServer[] = DEFAULT_ICE_SERVERS;
 export function setIceServers(servers: RTCIceServer[] | null) {
   configuredIceServers = (servers && servers.length > 0) ? servers : DEFAULT_ICE_SERVERS;
+  console.log('[peer] ICE config:', configuredIceServers.map((s) => {
+    const urls = Array.isArray(s.urls) ? s.urls.join(',') : s.urls;
+    return urls + (s.username ? ` (auth)` : '');
+  }).join(' | '));
 }
 
 export type SignalPayload =
