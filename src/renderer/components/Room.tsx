@@ -202,6 +202,10 @@ export function Room({ mode, invite, name, avatar, onLeave }: Props) {
       client.on('meetingEnded', (reason) => {
         setEndedBanner(reason || '会议已结束');
         stopAsr();
+        // Auto-exit back to lobby for non-host peers (host already navigates away).
+        if (!client.isHost) {
+          setTimeout(() => { client.leave(); onLeave(); }, 2500);
+        }
       });
 
       try {
