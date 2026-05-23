@@ -144,6 +144,8 @@ export class PeerConnection {
     this.listeners[ev] = cb;
   }
 
+  private pendingCandidates: RTCIceCandidateInit[] = [];
+
   async handleSignal(payload: SignalPayload) {
     try {
       if (payload.kind === 'sdp') {
@@ -151,6 +153,11 @@ export class PeerConnection {
           (this.makingOffer || this.pc.signalingState !== 'stable');
         if (offerCollision && !this.polite) return;
         await this.pc.setRemoteDescription(payload.sdp);
+        // Flush any ICE candidates that arrived before SDP
+        for (const c of this.pendingCandidates) {
+          this.pc.addIceCandidate(c).catch(() => {});
+        }
+        this.pendingCandidates = [];
         if (payload.sdp.type === 'offer') {
           await this.pc.setLocalDescription();
           if (this.pc.localDescription) {
@@ -158,6 +165,11 @@ export class PeerConnection {
           }
         }
       } else {
+        // Buffer candidates until remote description is set
+        if (!this.pc.remoteDescription) {
+          this.pendingCandidates.push(payload.candidate);
+          return;
+        }
         try {
           await this.pc.addIceCandidate(payload.candidate);
         } catch (err) {
