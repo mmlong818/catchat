@@ -149,7 +149,7 @@ apt update && apt install -y coturn
 printf 'listening-port=3478\nexternal-ip=你的服务器公网IP\nmin-port=49152\nmax-port=65535\nlt-cred-mech\nuser=catchat:你的TURN密码\nrealm=catchat\nno-cli\nno-tlsv1\nno-tlsv1_1\nfingerprint\nlog-file=/var/log/turnserver.log\n' > /etc/turnserver.conf
 ```
 
-> 例子：`external-ip=1.2.3.4`、`user=catchat:REDACTED`
+> 例子：`external-ip=1.2.3.4`、`user=catchat:my-strong-password`
 > 密码不要用特殊字符（避免 `& $ ! \` " /`）
 
 ### 3.6 启动 + 设为开机自启
@@ -204,12 +204,12 @@ ss -ulnp | grep 3478
 ]
 ```
 
-例子：
+例子（请替换为你自己的）：
 ```json
 [
   {"urls": "stun:stun.l.google.com:19302"},
-  {"urls": "turn:1.2.3.4:3478?transport=udp", "username": "catchat", "credential": "REDACTED"},
-  {"urls": "turn:1.2.3.4:3478?transport=tcp", "username": "catchat", "credential": "REDACTED"}
+  {"urls": "turn:1.2.3.4:3478?transport=udp", "username": "catchat", "credential": "my-strong-password"},
+  {"urls": "turn:1.2.3.4:3478?transport=tcp", "username": "catchat", "credential": "my-strong-password"}
 ]
 ```
 
