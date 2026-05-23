@@ -8,7 +8,9 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript&logoColor=white)
 [![License](https://img.shields.io/badge/License-AGPLv3-blue)](LICENSE)
 
-**[👉 下载最新安装包](https://github.com/mmlong818/catchat/releases/latest)** · **[问题反馈](https://github.com/mmlong818/catchat/issues)**
+**[👉 下载最新安装包](https://github.com/mmlong818/catchat/releases/latest)** · **[📖 完整部署指南](docs/SETUP.md)** · **[问题反馈](https://github.com/mmlong818/catchat/issues)**
+
+> ⚠️ **重要**：CatChat 默认需要三个外部服务（阿里云 ASR / 信令中转 / TURN 中继）才能跨网络可用。新用户**强烈推荐先看 [完整部署指南](docs/SETUP.md)**，按步骤配置完整套环境，约 1.5 小时即可搭好属于自己的会议系统。
 
 ## ✨ 功能
 
@@ -124,86 +126,20 @@ catchat/
 └── package.json
 ```
 
-## ☁️ 部署信令服务到 Render（免费）
+## ☁️ 部署外部服务
 
-CatChat 默认连接公共信令 `wss://catchat-signal.onrender.com`。如果你想自建：
+跨网络使用需要三个外部服务，**详细步骤见 [完整部署指南](docs/SETUP.md)**：
 
-### 1. Fork 或克隆信令服务代码
+| 服务 | 用途 | 推荐方案 | 成本 |
+|---|---|---|---|
+| 阿里云 DashScope | 语音转写 | 注册阿里云 → 百炼控制台 → 创建 API Key | 按时长，~¥3/h |
+| 信令中转 | WebRTC SDP 交换 | Render.com 免费层 部署 `signaling-server/` | 免费 |
+| TURN 中继 | 对称 NAT 跨网络 | 阿里云轻量香港 ¥24/月 + coturn | ¥24/月 |
 
-信令服务的源码在仓库的 `signaling-server/` 目录，**独立的 Node.js + ws 服务**，约 100 行。
-
-把 `signaling-server/` 单独 push 到一个 GitHub 仓库（Render 部署需要 git 源）：
-
-```bash
-cd signaling-server
-git init
-git add .
-git commit -m "init signaling"
-gh repo create my-catchat-signal --public --source=. --push
-# 或者手动在 github.com/new 建仓 → git remote add → git push
-```
-
-### 2. 在 Render 创建 Web Service
-
-1. 注册 https://render.com（用 GitHub 账号最快）
-2. Dashboard → **New +** → **Web Service**
-3. 选 **Build and deploy from a Git repository** → Connect GitHub → 选 `my-catchat-signal` 仓库
-4. 填表：
-
-   | 字段 | 填入 |
-   |---|---|
-   | **Name** | `my-catchat-signal` |
-   | **Language** | `Node` |
-   | **Branch** | `main` |
-   | **Region** | `Singapore` / `Oregon`（按用户所在地选） |
-   | **Root Directory** | 留空 |
-   | **Build Command** | `npm install` |
-   | **Start Command** | `npm start` |
-   | **Instance Type** | **Free** |
-
-5. **Deploy Web Service** → 等待 2-3 分钟构建完成
-
-### 3. 获取你的信令 URL
-
-构建完成后，页面顶部会显示一个域名，例如：
-```
-https://my-catchat-signal-xxxx.onrender.com
-```
-
-把 `https://` 改成 `wss://` 就是你的信令地址：
-```
-wss://my-catchat-signal-xxxx.onrender.com
-```
-
-### 4. 验证可用性
-
-浏览器打开 `https://my-catchat-signal-xxxx.onrender.com/health`，应看到：
-```json
-{"ok":true,"rooms":0,"peers":0,"uptime":12.3}
-```
-
-### 5. 在 CatChat 里使用你的信令地址
-
-打开 CatChat → 大厅右上角 ⚙️ → **信令服务地址** 改成你的 wss URL → 保存。
-
-或者修改源码 `src/main/settings.ts` 里的 `signalingUrl` 默认值，重新打包，**让安装包默认就连你的服务**。
-
-### Render 免费层注意事项
-
-| 限制 | 影响 | 应对 |
-|---|---|---|
-| 15 分钟无连接自动休眠 | 首次连接需 ~30 秒唤醒 | 房主先开会议，第一个加入者多等一会 |
-| 每月 750 小时实例时间 | 单实例满月跑也够 | — |
-| 出向带宽 100GB/月 | 信令包很小，5000+ 场会议都够 | 媒体走 P2P 不占这个 |
-
-如果嫌 30 秒唤醒慢：升级 Render 付费层（$7/月）或换 Fly.io（小实例免费常在线）。
-
-### 其他部署方式
-
-- **Docker**：`signaling-server/Dockerfile` 已就绪，`docker build -t catchat-signal . && docker run -p 8080:8080 catchat-signal`
-- **VPS**：`node server.js` + Nginx 反代 + Let's Encrypt 证书
-
-详见 [`signaling-server/README.md`](signaling-server/README.md)。
+部署详解见：
+- [完整部署指南（一站式）](docs/SETUP.md) ← **新手首选**
+- [TURN 服务详细配置](docs/TURN-deployment.md)
+- [信令服务 README](signaling-server/README.md)
 
 ## 🔐 安全与隐私
 
