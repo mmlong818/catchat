@@ -17,6 +17,7 @@ function createWindow() {
     center: true,
     show: false,
     title: 'CatChat',
+    icon: path.join(__dirname, '../../build/icon.png'),
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.js'),

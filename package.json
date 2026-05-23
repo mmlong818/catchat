@@ -1,6 +1,6 @@
 {
   "name": "voice-meet",
-  "version": "0.2.27",
+  "version": "0.2.28",
   "description": "P2P 语音会议系统（Electron + WebRTC + 阿里云 fun-asr-realtime）",
   "license": "AGPL-3.0-or-later",
   "main": "dist/main/index.js",
@@ -11,7 +11,8 @@
     "build": "tsc -p tsconfig.main.json && vite build",
     "start": "electron .",
     "typecheck": "tsc -p tsconfig.main.json --noEmit && tsc -p tsconfig.renderer.json --noEmit",
-    "package": "npm run build && electron-builder"
+    "icons": "node build/generate-icons.mjs",
+    "package": "npm run icons && npm run build && electron-builder"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
@@ -30,8 +31,10 @@
     "concurrently": "^8.2.2",
     "electron": "^31.0.0",
     "electron-builder": "^24.13.3",
+    "png-to-ico": "^3.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "sharp": "^0.34.5",
     "typescript": "^5.5.0",
     "vite": "^5.3.0",
     "wait-on": "^7.2.0"
@@ -52,6 +55,7 @@
     ],
     "files": [
       "dist/**/*",
+      "build/icon.png",
       "node_modules/**/*",
       "!**/.env",
       "!**/.env.*",
@@ -63,13 +67,21 @@
       "!**/{CHANGELOG.md,LICENSE,license,README.md,readme.md,HISTORY.md}"
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.ico"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "build/icon.png"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico"
     }
   }
 }
